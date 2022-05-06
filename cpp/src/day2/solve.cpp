@@ -1,12 +1,13 @@
 #include <iostream>
-#include <cstring>
 
 #include "solve.hpp"
+
 #include "util/util.hpp"
 
-auto daytwo::parse_commands(const std::vector<std::string_view>& command_strs) -> std::vector<cmd_pair> {
+auto daytwo::parse_commands(const std::vector<std::string_view>& command_strs)
+-> std::vector<cmd_pair> {
     std::vector<cmd_pair> commands{};
-    for (const auto & cmd_str : command_strs) {
+    for (const auto& cmd_str : command_strs) {
         cmd_pair cmd{};
         const auto parts = split_once(cmd_str, " ");
         for (uint8_t i = 0; i < COMMANDS.size(); ++i) {
@@ -21,17 +22,31 @@ auto daytwo::parse_commands(const std::vector<std::string_view>& command_strs) -
     return commands;
 }
 
-auto daytwo::update_position(const std::vector<cmd_pair>& commands, position& pos) -> void {
-    for (const auto & cmd : commands) {
+auto daytwo::update_position(const std::vector<cmd_pair>& commands,
+                                 position& pos, uint8_t part) -> void {
+    for (const auto& cmd : commands) {
         switch (cmd.first) {
             case FORWARD:
-                pos.horizontal += cmd.second;
+                if (part == 1) {
+                    pos.horizontal += cmd.second;
+                } else {
+                    pos.horizontal += cmd.second;
+                    pos.depth += cmd.second * pos.aim;
+                }
                 break;
             case DOWN:
-                pos.depth += cmd.second;
+                if (part == 1) {
+                    pos.depth += cmd.second;
+                } else {
+                    pos.aim += cmd.second;
+                }
                 break;
             case UP:
-                pos.depth -= cmd.second;
+                if (part == 1) {
+                    pos.depth -= cmd.second;
+                } else {
+                    pos.aim -= cmd.second;
+                }
                 break;
             default:
                 throw std::runtime_error{"Undefined command type"};
@@ -39,11 +54,22 @@ auto daytwo::update_position(const std::vector<cmd_pair>& commands, position& po
     }
 }
 
-auto daytwo::solve() -> void {
-    const auto commands = tokenize(read_file_to_string("../src/day2/input/input.txt"));
+auto daytwo::part_one(const std::vector<std::string_view>& command_strs) -> void {
     position pos{};
-
-    update_position(parse_commands(commands), pos);
-
+    update_position(parse_commands(command_strs), pos, 1);
     std::cout << pos.depth * pos.horizontal << '\n';
+}
+
+auto daytwo::part_two(const std::vector<std::string_view>& command_strs) -> void {
+    position pos{};
+    update_position(parse_commands(command_strs), pos, 2);
+    std::cout << pos.depth * pos.horizontal << '\n';
+}
+
+auto daytwo::solve() -> void {
+    const auto commands_strs =
+        tokenize(read_file_to_string("../src/day2/input/input.txt"));
+
+    part_one(commands_strs);
+    part_two(commands_strs);
 }
