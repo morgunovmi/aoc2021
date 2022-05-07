@@ -8,6 +8,7 @@ sources = files([
   './src/main.cpp',
   './src/day1/solve.cpp',
   './src/day2/solve.cpp',
+  './src/day3/solve.cpp',
   './src/util/util.cpp'
   ])
 

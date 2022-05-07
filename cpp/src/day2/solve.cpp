@@ -67,8 +67,8 @@ auto daytwo::part_two(const std::vector<std::string_view>& command_strs) -> void
 }
 
 auto daytwo::solve() -> void {
-    const auto commands_strs =
-        tokenize(read_file_to_string("../src/day2/input/input.txt"));
+    const auto str = read_file_to_string("../src/day2/input/input.txt");
+    const auto commands_strs = tokenize(str);
 
     part_one(commands_strs);
     part_two(commands_strs);
