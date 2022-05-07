@@ -5,6 +5,10 @@
 #include "day3/solve.hpp"
 #include "util/util.hpp"
 
+#include <vector>
+#include <string_view>
+#include <algorithm>
+
 auto main() -> int {
     dayone::solve();
     daytwo::solve();
